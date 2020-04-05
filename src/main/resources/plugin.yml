@@ -1,0 +1,17 @@
+name: PixelEmpires
+version: ${project.version}
+main: me.sucrosedev.pixelempires.PixelEmpires
+api-version: 1.13
+commands:
+  join:
+    description: Join world
+  lobby:
+    description: Teleport to lobby [OP]
+  broadcast:
+    description: Broadcast argument
+  smite:
+    description: Smite given player if they exist
+  silent-tp:
+    description: Silent tp command
+  invisible:
+    description: Toggles player invisibility
