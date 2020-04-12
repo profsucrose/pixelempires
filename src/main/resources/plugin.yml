@@ -6,7 +6,7 @@ commands:
   join:
     description: Join world
   lobby:
-    description: Teleport to lobby [OP]
+    description: Teleport to lobby
   broadcast:
     description: Broadcast argument
   smite:
@@ -15,3 +15,15 @@ commands:
     description: Silent tp command
   invisible:
     description: Toggles player invisibility
+  flyspeed:
+    description: Set flight speed
+  takecoins:
+    description: Take coins from specified player
+  givecoins:
+    description: Create and give new coins to specified player
+  pay:
+    description: Transact Pixel Coins
+  balance:
+    description: Get current balance
+  shrine:
+    description: Get closest shrine

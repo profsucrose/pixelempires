@@ -31,6 +31,7 @@ public class Smite implements CommandExecutor {
         }
 
         playerToSmite.getWorld().strikeLightningEffect(playerToSmite.getLocation());
+        playerToSmite.setHealth(0);
         Bukkit.broadcastMessage(ChatColor.GOLD + playerToSmite.getDisplayName() + " has been smitten by the gods!");
 
         return true;
