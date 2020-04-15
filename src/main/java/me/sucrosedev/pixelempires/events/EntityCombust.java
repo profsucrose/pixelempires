@@ -1,5 +1,7 @@
 package me.sucrosedev.pixelempires.events;
 
+import me.sucrosedev.pixelempires.commands.Dungeon;
+import me.sucrosedev.pixelempires.util.Direction;
 import me.sucrosedev.pixelempires.util.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,19 +17,36 @@ import java.util.concurrent.ExecutionException;
 
 public class EntityCombust implements Listener {
 
-    private static boolean isWithin(int x, int y, int range) {
-        return Math.abs(x - y) <= range;
-    }
+    private static int[] statueOfWealthFireCoords = {1112, 70, -112};
 
     @EventHandler
     public static void onEntityCombust(EntityCombustByBlockEvent e) {
         if (e.getEntity().getType().equals(EntityType.DROPPED_ITEM)) {
             Location location = e.getEntity().getLocation();
-            if (isWithin(location.getBlockX(), 1112, 2)
-            && isWithin(location.getBlockY(), 70, 2)
-            && isWithin(location.getBlockZ(), -112, 2)) {
-                Item item = (Item) e.getEntity();
-                Player player = PlayerDropItem.lastPlayerToDropItem;
+
+            Item item = (Item) e.getEntity();
+            Player player = PlayerDropItem.lastPlayerToDropItem;
+
+            if (Direction.locationIsWithinXYZ(location, Dungeon.mazeAltarCoords, 2)) {
+                System.out.println(item.getItemStack().getItemMeta().getDisplayName());
+                if (item.getItemStack().getItemMeta().getDisplayName().equals(Dungeon.mazeKeyName)) {
+                    System.out.println("Keys equal");
+                    Dungeon.mazeKeyCount += item.getItemStack().getAmount();
+                    if (Dungeon.mazeKeyCount == 3) {
+                        player.sendMessage(ChatColor.GOLD + "Congratulations, you have delivered all altar keys...");
+                        player.getInventory().addItem(Dungeon.createDungeonKey("Navigation", ChatColor.GREEN));
+                    } else {
+                        int supplement = (3 - Dungeon.mazeKeyCount);
+                        player.sendMessage(ChatColor.GOLD + "Good, you need deliver only " + supplement + " more key" + (supplement > 1 ? "s" : "") + "...");
+                    }
+                } else {
+                    player.sendMessage(ChatColor.RED + "The altar accepts only the correct kind of key...");
+                    player.getInventory().addItem(item.getItemStack());
+                }
+            }
+
+            if (Direction.locationIsWithinXYZ(location, statueOfWealthFireCoords, 2)) {
+
                 if (player == null) {
                     System.out.println("No player has burned an item recently");
                 }

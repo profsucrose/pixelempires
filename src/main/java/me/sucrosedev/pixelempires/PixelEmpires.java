@@ -3,11 +3,8 @@ package me.sucrosedev.pixelempires;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import me.sucrosedev.pixelempires.commands.*;
 import me.sucrosedev.pixelempires.commands.AdminSuite.*;
-import me.sucrosedev.pixelempires.commands.Balance;
-import me.sucrosedev.pixelempires.commands.Join;
-import me.sucrosedev.pixelempires.commands.Pay;
-import me.sucrosedev.pixelempires.commands.TeleportToLobby;
 import me.sucrosedev.pixelempires.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -44,6 +41,7 @@ public final class PixelEmpires extends JavaPlugin {
         initFirebase();
 
         plugin = this;
+        Dungeon.createAltarKey();
 
         // load primary world
         getServer().createWorld(new WorldCreator("lobby"));
@@ -57,6 +55,9 @@ public final class PixelEmpires extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new BlockPlace(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryClick(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryOpen(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerMove(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new EntityDeath(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
 
         getCommand("join").setExecutor(new Join());
         getCommand("lobby").setExecutor(new TeleportToLobby());
@@ -70,6 +71,7 @@ public final class PixelEmpires extends JavaPlugin {
         getCommand("shrine").setExecutor(new Shrine());
         getCommand("takecoins").setExecutor(new TakeCoins());
         getCommand("givecoins").setExecutor(new GiveCoins());
+        getCommand("dungeon").setExecutor(new Dungeon());
     }
 
 }

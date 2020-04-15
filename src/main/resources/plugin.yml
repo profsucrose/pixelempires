@@ -27,3 +27,5 @@ commands:
     description: Get current balance
   shrine:
     description: Get closest shrine
+  dungeon:
+    description: Command for testing dungeon

@@ -1,21 +1,43 @@
 package me.sucrosedev.pixelempires.events;
 
+import me.sucrosedev.pixelempires.commands.Dungeon;
 import me.sucrosedev.pixelempires.util.Direction;
 import me.sucrosedev.pixelempires.util.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryClick implements Listener {
 
 
+
+
+
+    private static int getItemCountInInventory(Inventory inventory, ItemStack item) {
+        int count = 0;
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack checkItem = inventory.getItem(i);
+            if (checkItem == null) continue;
+            if (checkItem.getItemMeta().getDisplayName().contains("Key of")) {
+                count += checkItem.getAmount();
+            }
+        }
+        return count;
+    }
+
+    public static void onAllKeysEntered(Player player) {
+        player.sendMessage(ChatColor.GOLD + "Congratulations, but you are not done yet...");
+    }
 
     @EventHandler
     public static void onInventoryClick(InventoryClickEvent e) {
@@ -30,6 +52,24 @@ public class InventoryClick implements Listener {
 
         if (!(location.getBlock().getState() instanceof Chest)) return;
         Chest chest = (Chest) location.getBlock().getState();
+
+        if (Direction.checkIfLocationXYZEqual(location, Dungeon.altarChestCoords)) {
+            System.out.println("Added key");
+            int keysInChest = getItemCountInInventory(e.getInventory(), Dungeon.altarKey);
+
+            System.out.println(e.getCursor());
+            if ((!e.getCursor().getType().equals(Material.AIR)
+                    && e.getCursor().getItemMeta().getDisplayName().contains("Key of"))
+                    || (!e.getCurrentItem().getType().equals(Material.AIR)
+                    && e.getCurrentItem().getItemMeta().getDisplayName().contains("Key of"))
+            ) keysInChest += 1;
+            System.out.println(keysInChest);
+            if (keysInChest == 3) {
+                onAllKeysEntered(player);
+            }
+        }
+
+
         if (!chest.hasMetadata("isChestShop")
                 || chest.getMetadata("ownerId").get(0).asString().equals(player.getUniqueId().toString())) return;
         BlockFace direction = ((Directional) chest.getBlockData()).getFacing();
